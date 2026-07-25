@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
     label: "Buy a Home",
     href: "/buy-a-home",
   },
-  { label: "Refinance", href: "/refinance" },
+  { label: "Refinance", href: "/buy-a-home" },
   { label: "Mortgage Calculators", href: "/mortgage-Calculators" },
   {
     label: "Learning Center",
@@ -25,7 +25,6 @@ const navItems: NavItem[] = [
       { label: "Loan Process", href: "/learning-center/loan-process" },
       { label: "Mortgage Basics", href: "/learning-center/mortgage-basics" },
       { label: "Online", href: "/learning-center/online" },
-      { label: "Forms", href: "/learning-center/forms" },
       { label: "FAQ", href: "/learning-center/faq" },
       { label: "Blog", href: "/learning-center/blog" },
     ],
@@ -59,7 +58,7 @@ export function Navbar() {
                 src="/img/logo.png"
                 alt="logo"
                 className="md:w-40 md:h-40 w-full"
-              />  
+              />
             </Link>
 
             <div className="flex items-center gap-8">
@@ -85,12 +84,12 @@ export function Navbar() {
                   )}
 
                   {item.submenu && (
-                    <div className="absolute left-0 mt-0 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="absolute left-0 mt-0 w-48 bg-white border border-neutral-200 rounded-lg shadow-lg bg-white  opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                       {item.submenu.map((subitem) => (
                         <Link
                           key={subitem.label}
                           href={subitem.href}
-                          className="block px-4 py-3 text-neutral-700 hover:bg-accent hover:text-primary transition-colors first:rounded-t-lg last:rounded-b-lg"
+                          className="block px-4 py-3 text-neutral-700 hover:bg-[#1D87A1] hover:text-primary transition-colors first:rounded-t-lg last:rounded-b-lg"
                         >
                           {subitem.label}
                         </Link>
@@ -102,7 +101,7 @@ export function Navbar() {
             </div>
 
             <Link
-              href="/get-started"
+              href="/about/contact"
               className="inline-flex items-center gap-3 px-8 py-3 text-lg font-semibold bg-gradient-to-r from-[#1D87A1]  via-[#30ACBF] to-[#2D89A1] text-white bg-pramery  rounded-full shadow-2xl hover:shadow-white/30 transition-all duration-300 hover:scale-105 active:scale-95"
               style={{
                 transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) translateZ(10px)`,
@@ -143,13 +142,13 @@ export function Navbar() {
           </div>
 
           {mobileOpen && (
-            <div className="mt-4 space-y-2 pb-4">
+            <div className=" space-y-2  bg-white  ">
               {navItems.map((item) => (
                 <div key={item.label}>
                   {item.href ? (
                     <Link
                       href={item.href}
-                      className="block px-4 py-2 text-neutral-700 hover:bg-accent rounded-lg transition-colors"
+                      className="block px-4 py-2 text-neutral-700 hover:text-white hover:bg-[#1D87A1] rounded-lg transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
                       {item.label}
@@ -162,7 +161,7 @@ export function Navbar() {
                             openMenu === item.label ? null : item.label,
                           )
                         }
-                        className="w-full text-left px-4 py-2 text-neutral-700 hover:bg-accent rounded-lg transition-colors flex items-center justify-between"
+                        className="w-full text-left  px-4 py-2 text-neutral-700 hover:text-white hover:bg-[#1D87A1] rounded-lg transition-colors flex items-center justify-between"
                       >
                         {item.label}
                         <ChevronDown
@@ -178,7 +177,7 @@ export function Navbar() {
                             <Link
                               key={subitem.label}
                               href={subitem.href}
-                              className="block px-4 py-2 text-neutral-600 hover:text-primary transition-colors text-sm"
+                              className="block px-4 py-2 text-neutral-700 hover:text-white hover:bg-[#1D87A1] transition-colors text-sm"
                               onClick={() => setMobileOpen(false)}
                             >
                               {subitem.label}
@@ -191,7 +190,7 @@ export function Navbar() {
                 </div>
               ))}
               <Link
-                href="/get-started"
+                href="/about/contact"
                 className="btn-primary block text-center"
                 onClick={() => setMobileOpen(false)}
               >

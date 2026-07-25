@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 // Data for the three services
 const services = [
   {
-    href: "/home-purchase",
+    href: "/buy-a-home",
     title: "Purchase",
     description: "Get started with your home purchase",
     svg: (
@@ -337,7 +337,7 @@ const services = [
     ),
   },
   {
-    href: "/home-refinance",
+    href: "/learning-center/loan-programs",
     title: "Refinance",
     description: "Learn what your refinancing options are",
     svg: (
@@ -1062,7 +1062,7 @@ const services = [
     ),
   },
   {
-    href: "/staff-roster",
+    href: "/learning-center/loan-programs",
     title: "Find a Loan Officer",
     description: "We're here to help you every step of the way",
     svg: (

@@ -2,12 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  User,
-  FileText,
-  CheckCircle,
-} from "lucide-react";
+import { ArrowRight, User, FileText, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image"; // optional, but recommended for Next.js
 
@@ -62,9 +57,9 @@ const FloatingCube = () => {
 
 export function HeroSection() {
   const steps = [
-    { icon: User, text: "Tell Us About Yourself" },
-    { icon: FileText, text: "Get a Quick Quote" },
-    { icon: CheckCircle, text: "Apply Today" },
+    { icon: User, text: "Tell Us About Yourself", href:"/about/contact" },
+    { icon: FileText, text: "Get a Quick Quote", href:"/about/testimonials" },
+    { icon: CheckCircle, text: "Apply Today", href:"/about/contact" },
   ];
 
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
@@ -110,7 +105,8 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             style={{
-              textShadow: "0 10px 30px rgba(0,0,0,0.25), 0 0 20px rgba(255,255,255,0.15)",
+              textShadow:
+                "0 10px 30px rgba(0,0,0,0.25), 0 0 20px rgba(255,255,255,0.15)",
               transform: "perspective(600px) rotateX(2deg)",
             }}
           >
@@ -151,7 +147,11 @@ export function HeroSection() {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="flex flex-col items-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               >
-                <step.icon size={40} className="text-white mb-3 drop-shadow-lg" strokeWidth={1.5} />
+                <step.icon
+                  size={40}
+                  className="text-white mb-3 drop-shadow-lg"
+                  strokeWidth={1.5}
+                />
                 <span className="text-lg font-medium text-white/95">
                   {step.text}
                 </span>
@@ -175,7 +175,7 @@ export function HeroSection() {
             style={{ perspective: "800px" }}
           >
             <Link
-              href="/get-started"
+              href="/about/contact"
               className="inline-flex items-center gap-3 px-10 py-4 text-lg font-semibold text-[#1D87A1] bg-white rounded-full shadow-2xl hover:shadow-white/30 transition-all duration-300 hover:scale-105 active:scale-95"
               style={{
                 transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) translateZ(10px)`,
@@ -183,7 +183,10 @@ export function HeroSection() {
               }}
             >
               Get Started
-              <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={24}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
           </motion.div>
         </div>

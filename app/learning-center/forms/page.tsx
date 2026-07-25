@@ -51,7 +51,7 @@ export default function FormsPage() {
         <HeroSection
           title="Forms & Documents"
           subtitle="Download the forms you need for your mortgage application."
-          cta={{ text: "Get Pre-Qualified", href: "/get-started" }}
+          cta={{ text: "Get Pre-Qualified", href: "/about/contact" }}
         />
 
         <section className="py-16 md:py-24 bg-white">
@@ -116,7 +116,7 @@ export default function FormsPage() {
           title="Ready to Get Started?"
           subtitle="Begin your application and let us guide you through the process."
           ctaText="Apply Now"
-          ctaHref="/get-started"
+          ctaHref="/about/contact"
         />
       </main>
     </>

@@ -102,7 +102,7 @@ export default function LearningCenterPage() {
           title="Ready to Take the Next Step?"
           subtitle="Use what you've learned to get pre-qualified for your perfect mortgage."
           ctaText="Get Pre-Qualified"
-          ctaHref="/get-started"
+          ctaHref="/about/contact"
           secondaryText="Contact an Expert"
           secondaryHref="/about/contact"
         />

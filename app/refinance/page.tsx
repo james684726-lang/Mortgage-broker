@@ -39,7 +39,7 @@ export default function RefinancePage() {
         <HeroSection
           title="Ready to Refinance?"
           subtitle="Lower your monthly payments, access home equity, or switch to a better loan term."
-          cta={{ text: "Get Your Quote", href: "/get-started" }}
+          cta={{ text: "Get Your Quote", href: "/about/contact" }}
           secondaryCta={{ text: "Calculate Savings", href: "/calculators" }}
         />
 
@@ -92,7 +92,7 @@ export default function RefinancePage() {
           title="Check Your Refinance Eligibility"
           subtitle="Find out how much you could save with a LendPro refinance."
           ctaText="Get Started"
-          ctaHref="/get-started"
+          ctaHref="/about/contact"
           secondaryText="Contact Our Team"
           secondaryHref="/about/contact"
         />
