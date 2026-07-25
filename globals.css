@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Your existing colors */
+  --color-primary: #367ACA;
+  --color-accent: #FBF7FF;
+  --color-primary-dark: #1f5a96;
+  --color-primary-light: #5a94db;
+  --color-neutral-50: #f9f9f9;
+  --color-neutral-100: #f3f3f3;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+
+  /* ✨ NEW: Your exact hero gradient colors (both names & hex) */
+  --color-brand-start: #1D87A1;
+  --color-brand-mid: #30ACBF;
+  --color-brand-end: #2D89A1;
+
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-neutral-50 text-neutral-900;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors duration-200 inline-flex items-center gap-2;
+  }
+  .btn-secondary {
+    @apply bg-neutral-200 text-neutral-900 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-300 transition-colors duration-200 inline-flex items-center gap-2;
+  }
+  .btn-outline {
+    @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200 inline-flex items-center gap-2;
+  }
+  .section-title {
+    @apply text-3xl sm:text-4xl font-bold text-neutral-900 text-balance;
+  }
+  .section-subtitle {
+    @apply text-lg text-neutral-600 text-balance;
+  }
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200;
+  }
+  .fade-in {
+    @apply animate-fade-in;
+  }
+  .slide-in-up {
+    @apply animate-slide-in-up;
+  }
+}
+
+@layer utilities {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-in-out;
+  }
+  .animate-slide-in-up {
+    animation: slide-in-up 0.6s ease-out;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .animate-marquee {
+    animation: marquee 15s linear infinite;
+  }
+}
+/* ===== Custom Scrollbar - White Background, Thick Thumb ===== */
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+/* ===== FORCE WHITE SCROLLBAR WITH BLUE THUMB ===== */
+
+/* WebKit */
+::-webkit-scrollbar {
+  width: 14px !important;
+  height: 14px !important;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.05) !important;
+}
+::-webkit-scrollbar-thumb {
+  background: #1D87A1 !important;
+  border-radius: 8px !important;
+  border: 3px solid #ffffff !important;
+  min-height: 40px !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2D89A1 !important;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #1f5a96 !important;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thick !important;
+  scrollbar-color: #1D87A1 #ffffff !important;
+}
+
+/* IE/Edge legacy */
+body {
+  -ms-scrollbar-track-color: #ffffff !important;
+  -ms-scrollbar-face-color: #1D87A1 !important;
+}
