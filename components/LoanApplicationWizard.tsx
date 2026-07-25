@@ -1,145 +1,227 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
+  CheckCircle,
   Home,
   Building2,
-  Briefcase,
+  Warehouse,
+  Plane,
   CreditCard,
   MapPin,
   User,
-  CheckCircle,
+  Mail,
+  Phone,
+  Calendar,
+  Shield,
+  TrendingUp,
+  HelpCircle,
 } from "lucide-react";
 
-// ---- Step Content Components ----
+// 👇 Custom loan icons
+import {
+  PurchaseIcon,
+  RefinanceIcon,
+  HomeEquityIcon,
+} from "@/components/LoanIcons";
 
-// Step 0: Loan Type
+// ---- Helper ----
+const hasAutoAdvanceValue = (stepId: string, answers: any): boolean => {
+  switch (stepId) {
+    case "loan-type":
+      return answers.loanType !== "";
+    case "property-type":
+      return answers.propertyType !== "";
+    case "property-use":
+      return answers.propertyUse !== "";
+    case "credit":
+      return answers.credit !== "";
+    case "found-home":
+      return answers.foundHome !== "";
+    case "military":
+      return answers.military !== "";
+    case "buy-within":
+      return answers.buyWithin !== "";
+    case "first-time":
+      return answers.firstTime !== "";
+    case "bankruptcy":
+      return answers.bankruptcy !== "";
+    default:
+      return false;
+  }
+};
+
+// ---- Step 0: Loan Type (custom SVGs) ----
 const StepLoanType = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">SELECT A LOAN TYPE</h3>
-    <div className="grid grid-cols-1 gap-3">
-      {["Purchase", "Refinance", "Home Equity"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-4 rounded-xl border-2 text-left font-medium transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
-    </div>
-  </div>
-);
-
-// Step 1: Property Type
-const StepPropertyType = ({ value, onChange }: any) => (
-  <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">SELECT PROPERTY TYPE</h3>
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {["Single Family", "Multi-Family", "Condominium", "Townhouse", "Manufactured Home"].map(
-        (option) => (
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">SELECT A LOAN TYPE</h3>
+    <div className="grid grid-cols-3 gap-4">
+      {[
+        { label: "Purchase", icon: PurchaseIcon, value: "Purchase" },
+        { label: "Refinance", icon: RefinanceIcon, value: "Refinance" },
+        { label: "Home Equity", icon: HomeEquityIcon, value: "Home Equity" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <>
           <button
-            key={option}
-            onClick={() => onChange(option)}
-            className={`p-3 rounded-xl border-2 text-left font-medium transition-all ${
-              value === option
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-2  aspect-square rounded-full p-2 transition-all ${
+              isSelected
                 ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
                 : "border-gray-200 hover:border-[#1D87A1]/50"
             }`}
           >
-            {option}
+            <Icon className={`w-full h-full ${isSelected ? "text-[#1D87A1]" : "text-gray-400"}`} />
+            
           </button>
-        )
-      )}
+          <span className="text-xs font-medium">{option.label}</span></>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 2: Property Use
+// ---- Step 1: Property Type ----
+const StepPropertyType = ({ value, onChange }: any) => (
+  <div className="space-y-4">
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">SELECT PROPERTY TYPE</h3>
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {[
+        { label: "Single Family", icon: Home, value: "Single Family" },
+        { label: "Multi-Family", icon: Building2, value: "Multi-Family" },
+        { label: "Condominium", icon: Building, value: "Condominium" },
+        { label: "Townhouse", icon: Warehouse, value: "Townhouse" },
+        { label: "Manufactured Home", icon: Hotel, value: "Manufactured Home" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-1.5 p-3 aspect-square rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={22} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="text-[10px] font-medium text-center leading-tight">{option.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+);
+
+// ---- Step 2: Property Use ----
 const StepPropertyUse = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">WHAT IS THE PROPERTY USE?</h3>
-    <div className="grid grid-cols-1 gap-3">
-      {["Primary Residence", "Vacation Home", "Investment Property"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-4 rounded-xl border-2 text-left font-medium transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">WHAT IS THE PROPERTY USE?</h3>
+    <div className="grid grid-cols-3 gap-4">
+      {[
+        { label: "Primary Residence", icon: Home, value: "Primary Residence" },
+        { label: "Vacation Home", icon: Plane, value: "Vacation Home" },
+        { label: "Investment Property", icon: TrendingUp, value: "Investment Property" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-2 p-4 aspect-square rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={28} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="text-[10px] font-medium text-center leading-tight">{option.label}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 3: Credit Score
+// ---- Step 3: Credit Score ----
 const StepCredit = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">HOW IS YOUR CREDIT?</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">HOW IS YOUR CREDIT?</h3>
     <div className="space-y-2">
       {[
-        { label: "Excellent", range: "780+", value: "excellent" },
-        { label: "Very Good", range: "720-779", value: "very-good" },
-        { label: "Good", range: "680-719", value: "good" },
-        { label: "Fair", range: "620-679", value: "fair" },
-        { label: "Poor", range: "620-", value: "poor" },
-      ].map((item) => (
-        <button
-          key={item.value}
-          onClick={() => onChange(item.value)}
-          className={`w-full p-3 rounded-xl border-2 flex justify-between items-center transition-all ${
-            value === item.value
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          <span className="font-medium">{item.label}</span>
-          <span className="text-sm text-gray-500">{item.range}</span>
-        </button>
-      ))}
+        { label: "Excellent", range: "780+", value: "excellent", icon: CreditCard },
+        { label: "Very Good", range: "720-779", value: "very-good", icon: CreditCard },
+        { label: "Good", range: "680-719", value: "good", icon: CreditCard },
+        { label: "Fair", range: "620-679", value: "fair", icon: CreditCard },
+        { label: "Poor", range: "620-", value: "poor", icon: CreditCard },
+      ].map((item) => {
+        const Icon = item.icon;
+        const isSelected = value === item.value;
+        return (
+          <button
+            key={item.value}
+            onClick={() => onChange(item.value)}
+            className={`w-full py-3 px-6 rounded-full border-2 flex items-center justify-between transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <Icon size={18} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+              <span className="font-medium">{item.label}</span>
+            </div>
+            <span className="text-sm text-gray-500">{item.range}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 4: Found Home?
+// ---- Step 4: Found Home? ----
 const StepFoundHome = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">HAVE YOU ALREADY FOUND A HOME?</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">HAVE YOU ALREADY FOUND A HOME?</h3>
     <div className="grid grid-cols-2 gap-4">
-      {["Yes", "No"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-6 rounded-xl border-2 text-center font-medium text-lg transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
+      {[
+        { label: "Yes", icon: CheckCircle, value: "Yes" },
+        { label: "No", icon: HelpCircle, value: "No" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-2 py-8 rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={36} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="text-lg font-medium">{option.label}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 5: Purchase Price
+// ---- Step 5: Purchase Price ----
 const StepPrice = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">PURCHASE PRICE</h3>
-    <div className="flex items-center gap-4">
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">PURCHASE PRICE</h3>
+    <div className="flex items-center justify-center gap-4">
       <span className="text-3xl font-bold text-[#1D87A1]">${value.toLocaleString()}</span>
     </div>
     <input
@@ -149,7 +231,7 @@ const StepPrice = ({ value, onChange }: any) => (
       step="5000"
       value={value}
       onChange={(e) => onChange(parseInt(e.target.value))}
-      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1D87A1]"
+      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#1D87A1]"
     />
     <div className="flex justify-between text-sm text-gray-400">
       <span>$50k</span>
@@ -158,11 +240,11 @@ const StepPrice = ({ value, onChange }: any) => (
   </div>
 );
 
-// Step 6: Down Payment
+// ---- Step 6: Down Payment ----
 const StepDownPayment = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">DOWN PAYMENT</h3>
-    <div className="flex items-center gap-4">
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">DOWN PAYMENT</h3>
+    <div className="flex items-center justify-center gap-4">
       <span className="text-3xl font-bold text-[#1D87A1]">{value}%</span>
     </div>
     <input
@@ -172,7 +254,7 @@ const StepDownPayment = ({ value, onChange }: any) => (
       step="1"
       value={value}
       onChange={(e) => onChange(parseInt(e.target.value))}
-      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1D87A1]"
+      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#1D87A1]"
     />
     <div className="flex justify-between text-sm text-gray-400">
       <span>0%</span>
@@ -181,99 +263,133 @@ const StepDownPayment = ({ value, onChange }: any) => (
   </div>
 );
 
-// Step 7: Military Service
+// ---- Step 7: Military Service ----
 const StepMilitary = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">MILITARY SERVICE?</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">MILITARY SERVICE?</h3>
     <div className="grid grid-cols-2 gap-4">
-      {["Yes", "No"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-6 rounded-xl border-2 text-center font-medium text-lg transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
+      {[
+        { label: "Yes", icon: Shield, value: "Yes" },
+        { label: "No", icon: HelpCircle, value: "No" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-2 py-8 rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={36} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="text-lg font-medium">{option.label}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 8: Buy Within
+// ---- Step 8: Buy Within ----
 const StepBuyWithin = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">YOU EXPECT TO BUY WITHIN?</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">YOU EXPECT TO BUY WITHIN?</h3>
     <div className="grid grid-cols-2 gap-3">
-      {["Soon", "Next 60 days", "Next 6 months", "Not very soon"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-4 rounded-xl border-2 text-center font-medium transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
+      {[
+        { label: "Soon", icon: Calendar, value: "Soon" },
+        { label: "Next 60 days", icon: Calendar, value: "Next 60 days" },
+        { label: "Next 6 months", icon: Calendar, value: "Next 6 months" },
+        { label: "Not very soon", icon: Calendar, value: "Not very soon" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex items-center justify-center gap-2 py-3 px-4 rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={16} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="font-medium">{option.label}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 9: First Time Buyer
+// ---- Step 9: First Time Buyer ----
 const StepFirstTime = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">FIRST TIME HOME BUYER?</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">FIRST TIME HOME BUYER?</h3>
     <div className="grid grid-cols-2 gap-4">
-      {["Yes", "No"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-6 rounded-xl border-2 text-center font-medium text-lg transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
+      {[
+        { label: "Yes", icon: CheckCircle, value: "Yes" },
+        { label: "No", icon: HelpCircle, value: "No" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-2 py-8 rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={36} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="text-lg font-medium">{option.label}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 10: Bankruptcy
+// ---- Step 10: Bankruptcy ----
 const StepBankruptcy = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">BANKRUPTCY IN LAST 7 YEARS?</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">BANKRUPTCY IN LAST 7 YEARS?</h3>
     <div className="grid grid-cols-2 gap-4">
-      {["Yes", "No"].map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={`p-6 rounded-xl border-2 text-center font-medium text-lg transition-all ${
-            value === option
-              ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
-              : "border-gray-200 hover:border-[#1D87A1]/50"
-          }`}
-        >
-          {option}
-        </button>
-      ))}
+      {[
+        { label: "Yes", icon: AlertCircle, value: "Yes" },
+        { label: "No", icon: CheckCircle, value: "No" },
+      ].map((option) => {
+        const Icon = option.icon;
+        const isSelected = value === option.value;
+        return (
+          <button
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={`flex flex-col items-center justify-center gap-2 py-8 rounded-full border-2 transition-all ${
+              isSelected
+                ? "border-[#1D87A1] bg-[#1D87A1]/10 text-[#1D87A1]"
+                : "border-gray-200 hover:border-[#1D87A1]/50"
+            }`}
+          >
+            <Icon size={36} className={isSelected ? "text-[#1D87A1]" : "text-gray-400"} />
+            <span className="text-lg font-medium">{option.label}</span>
+          </button>
+        );
+      })}
     </div>
   </div>
 );
 
-// Step 11: Annual Income
+// ---- Step 11: Annual Income ----
 const StepIncome = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">ANNUAL HOUSEHOLD INCOME?</h3>
-    <div className="flex items-center gap-4">
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">ANNUAL HOUSEHOLD INCOME?</h3>
+    <div className="flex items-center justify-center gap-4">
       <span className="text-3xl font-bold text-[#1D87A1]">${value.toLocaleString()}</span>
     </div>
     <input
@@ -283,7 +399,7 @@ const StepIncome = ({ value, onChange }: any) => (
       step="5000"
       value={value}
       onChange={(e) => onChange(parseInt(e.target.value))}
-      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1D87A1]"
+      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#1D87A1]"
     />
     <div className="flex justify-between text-sm text-gray-400">
       <span>$0</span>
@@ -292,11 +408,11 @@ const StepIncome = ({ value, onChange }: any) => (
   </div>
 );
 
-// Step 12: Monthly Debt
+// ---- Step 12: Monthly Debt ----
 const StepDebt = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">MONTHLY DEBT PAYMENTS</h3>
-    <div className="flex items-center gap-4">
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">MONTHLY DEBT PAYMENTS</h3>
+    <div className="flex items-center justify-center gap-4">
       <span className="text-3xl font-bold text-[#1D87A1]">${value.toLocaleString()}</span>
     </div>
     <input
@@ -306,7 +422,7 @@ const StepDebt = ({ value, onChange }: any) => (
       step="100"
       value={value}
       onChange={(e) => onChange(parseInt(e.target.value))}
-      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1D87A1]"
+      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#1D87A1]"
     />
     <div className="flex justify-between text-sm text-gray-400">
       <span>$0</span>
@@ -315,14 +431,14 @@ const StepDebt = ({ value, onChange }: any) => (
   </div>
 );
 
-// Step 13: Employment Status
+// ---- Step 13: Employment Status ----
 const StepEmployment = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">EMPLOYMENT STATUS</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">EMPLOYMENT STATUS</h3>
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none text-gray-700"
+      className="w-full p-4 rounded-full border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none text-gray-700"
     >
       <option value="">- Select an option -</option>
       <option value="employed">Employed</option>
@@ -333,53 +449,68 @@ const StepEmployment = ({ value, onChange }: any) => (
   </div>
 );
 
-// Step 14: Property Zip (optional)
+// ---- Step 14: Property Zip (optional) ----
 const StepZip = ({ value, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">PROPERTY ZIP (OPTIONAL)</h3>
-    <input
-      type="text"
-      placeholder="Enter ZIP code"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none text-gray-700"
-    />
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">PROPERTY ZIP (OPTIONAL)</h3>
+    <div className="flex items-center gap-3">
+      <MapPin size={24} className="text-[#1D87A1]" />
+      <input
+        type="text"
+        placeholder="Enter ZIP code"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full p-4 rounded-full border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none text-gray-700"
+      />
+    </div>
   </div>
 );
 
-// Step 15: Personal Information
+// ---- Step 15: Personal Information ----
 const StepPersonalInfo = ({ data, onChange }: any) => (
   <div className="space-y-4">
-    <h3 className="text-xl font-bold text-[#1D87A1]">TELL US ABOUT YOURSELF</h3>
+    <h3 className="text-xl font-bold text-[#1D87A1] text-center">TELL US ABOUT YOURSELF</h3>
     <div className="space-y-3">
-      <input
-        type="text"
-        placeholder="First Name"
-        value={data.firstName}
-        onChange={(e) => onChange("firstName", e.target.value)}
-        className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        value={data.lastName}
-        onChange={(e) => onChange("lastName", e.target.value)}
-        className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={data.email}
-        onChange={(e) => onChange("email", e.target.value)}
-        className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
-      />
-      <input
-        type="tel"
-        placeholder="Home Phone"
-        value={data.phone}
-        onChange={(e) => onChange("phone", e.target.value)}
-        className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
-      />
+      <div className="flex items-center gap-3">
+        <User size={20} className="text-[#1D87A1]" />
+        <input
+          type="text"
+          placeholder="First Name"
+          value={data.firstName}
+          onChange={(e) => onChange("firstName", e.target.value)}
+          className="w-full p-4 rounded-full border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <User size={20} className="text-[#1D87A1]" />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={data.lastName}
+          onChange={(e) => onChange("lastName", e.target.value)}
+          className="w-full p-4 rounded-full border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <Mail size={20} className="text-[#1D87A1]" />
+        <input
+          type="email"
+          placeholder="Email"
+          value={data.email}
+          onChange={(e) => onChange("email", e.target.value)}
+          className="w-full p-4 rounded-full border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <Phone size={20} className="text-[#1D87A1]" />
+        <input
+          type="tel"
+          placeholder="Home Phone"
+          value={data.phone}
+          onChange={(e) => onChange("phone", e.target.value)}
+          className="w-full p-4 rounded-full border-2 border-gray-200 focus:border-[#1D87A1] focus:outline-none"
+        />
+      </div>
       <p className="text-xs text-gray-400 mt-2">
         By providing your phone number and/or email and clicking "Submit" you agree to our
         Terms of Service and Privacy Policy and consent to receive marketing communications from
@@ -390,7 +521,7 @@ const StepPersonalInfo = ({ data, onChange }: any) => (
   </div>
 );
 
-// Thank You screen
+// ---- Thank You ----
 const ThankYou = () => (
   <div className="text-center py-12">
     <motion.div
@@ -406,8 +537,72 @@ const ThankYou = () => (
   </div>
 );
 
-// ---- Main Wizard ----
+// ---- Custom icons for missing Lucide ones ----
+const AlertCircle = ({ size = 24, className = "" }: { size?: number; className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+);
 
+const Hotel = ({ size = 24, className = "" }: { size?: number; className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M3 22V7" />
+    <path d="M21 22V7" />
+    <path d="M3 7h18" />
+    <path d="M7 22v-4h10v4" />
+    <path d="M7 7v-3a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3" />
+    <path d="M7 10h2" />
+    <path d="M15 10h2" />
+  </svg>
+);
+
+const Building = ({ size = 24, className = "" }: { size?: number; className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+    <line x1="9" y1="22" x2="15" y2="22" />
+    <line x1="9" y1="6" x2="15" y2="6" />
+    <line x1="9" y1="10" x2="15" y2="10" />
+    <line x1="9" y1="14" x2="15" y2="14" />
+    <line x1="9" y1="18" x2="15" y2="18" />
+  </svg>
+);
+
+// ---- Main Wizard ----
 const steps = [
   { id: "loan-type", label: "Loan Type", percent: 0, component: StepLoanType },
   { id: "property-type", label: "Property Type", percent: 6, component: StepPropertyType },
@@ -425,6 +620,18 @@ const steps = [
   { id: "employment", label: "Employment", percent: 76, component: StepEmployment },
   { id: "zip", label: "Zip", percent: 82, component: StepZip },
   { id: "personal", label: "Personal", percent: 88, component: StepPersonalInfo },
+];
+
+const autoAdvanceStepIds = [
+  "loan-type",
+  "property-type",
+  "property-use",
+  "credit",
+  "found-home",
+  "military",
+  "buy-within",
+  "first-time",
+  "bankruptcy",
 ];
 
 export function LoanApplicationWizard() {
@@ -451,18 +658,75 @@ export function LoanApplicationWizard() {
     phone: "",
   });
 
+  const autoAdvancedRef = useRef<number>(-1);
   const isLastStep = currentStep === steps.length;
   const step = steps[currentStep] || null;
+  const isAutoAdvance = step && autoAdvanceStepIds.includes(step.id);
+
+  const isStepValid = () => {
+    if (!step) return false;
+    const id = step.id;
+    switch (id) {
+      case "loan-type":
+        return answers.loanType !== "";
+      case "property-type":
+        return answers.propertyType !== "";
+      case "property-use":
+        return answers.propertyUse !== "";
+      case "credit":
+        return answers.credit !== "";
+      case "found-home":
+        return answers.foundHome !== "";
+      case "price":
+        return answers.price > 0;
+      case "down-payment":
+        return answers.downPayment >= 0;
+      case "military":
+        return answers.military !== "";
+      case "buy-within":
+        return answers.buyWithin !== "";
+      case "first-time":
+        return answers.firstTime !== "";
+      case "bankruptcy":
+        return answers.bankruptcy !== "";
+      case "income":
+        return answers.income >= 0;
+      case "debt":
+        return answers.debt >= 0;
+      case "employment":
+        return answers.employment !== "";
+      case "zip":
+        return true;
+      case "personal":
+        return (
+          answers.firstName !== "" &&
+          answers.lastName !== "" &&
+          answers.email !== "" &&
+          answers.phone !== ""
+        );
+      default:
+        return true;
+    }
+  };
 
   const handleContinue = () => {
-    if (currentStep < steps.length) {
+    if (isStepValid() && currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
+      autoAdvancedRef.current = -1;
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      const prevStep = currentStep - 1;
+      const prevStepId = steps[prevStep]?.id;
+      setCurrentStep(prevStep);
+      if (prevStepId && autoAdvanceStepIds.includes(prevStepId)) {
+        const hasValue = hasAutoAdvanceValue(prevStepId, answers);
+        autoAdvancedRef.current = hasValue ? prevStep : -1;
+      } else {
+        autoAdvancedRef.current = -1;
+      }
     }
   };
 
@@ -470,13 +734,24 @@ export function LoanApplicationWizard() {
     setAnswers((prev: any) => ({ ...prev, [field]: value }));
   };
 
+  useEffect(() => {
+    if (!step) return;
+    if (!isAutoAdvance) return;
+    if (!isStepValid()) return;
+    if (autoAdvancedRef.current === currentStep) return;
+    autoAdvancedRef.current = currentStep;
+    const timer = setTimeout(() => {
+      if (currentStep < steps.length) {
+        setCurrentStep(currentStep + 1);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [step, isAutoAdvance, isStepValid, currentStep, answers]);
+
   const renderStep = () => {
     if (isLastStep) return <ThankYou />;
-
     const StepComponent = step.component;
     let stepProps: any = {};
-
-    // Map step id to appropriate props
     switch (step.id) {
       case "loan-type":
         stepProps = { value: answers.loanType, onChange: (v: string) => handleChange("loanType", v) };
@@ -537,18 +812,16 @@ export function LoanApplicationWizard() {
       default:
         return null;
     }
-
     return <StepComponent {...stepProps} />;
   };
 
-  // Progress percentage
   const progress = isLastStep ? 100 : step?.percent || 0;
+  const valid = isStepValid();
 
   return (
     <section className="w-full bg-gradient-to-r from-[#1D87A1] via-[#30ACBF] to-[#2D89A1] py-12 md:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Progress Bar */}
           <div className="px-6 pt-6 pb-2">
             <div className="flex items-center gap-3">
               <span className="text-sm font-bold text-[#1D87A1]">{progress}%</span>
@@ -562,9 +835,7 @@ export function LoanApplicationWizard() {
               </div>
             </div>
           </div>
-
-          {/* Step Content */}
-          <div className="px-6 py-6 min-h-[400px] flex flex-col">
+          <div className="px-6 py-6 min-h-[420px] flex flex-col">
             <AnimatePresence mode="wait">
               <motion.div
                 key={isLastStep ? "thankyou" : currentStep}
@@ -575,13 +846,11 @@ export function LoanApplicationWizard() {
                 className="flex-1 flex flex-col justify-between"
               >
                 <div className="flex-1">{renderStep()}</div>
-
-                {/* Navigation Buttons */}
                 {!isLastStep && (
                   <div className="flex justify-between items-center mt-8 pt-4 border-t border-gray-100">
                     <button
                       onClick={handleBack}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                      className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-medium transition-all ${
                         currentStep === 0
                           ? "text-gray-300 cursor-not-allowed"
                           : "text-[#1D87A1] hover:bg-[#1D87A1]/10"
@@ -591,13 +860,20 @@ export function LoanApplicationWizard() {
                       <ChevronLeft size={18} />
                       back
                     </button>
-                    <button
-                      onClick={handleContinue}
-                      className="flex items-center gap-2 px-6 py-2 bg-[#1D87A1] text-white rounded-lg font-medium hover:bg-[#2D89A1] transition-all shadow-md hover:shadow-lg"
-                    >
-                      {currentStep === steps.length - 1 ? "Submit" : "Continue"}
-                      <ChevronRight size={18} />
-                    </button>
+                    {!isAutoAdvance && (
+                      <button
+                        onClick={handleContinue}
+                        disabled={!valid}
+                        className={`flex items-center gap-2 px-8 py-2.5 rounded-full font-medium transition-all shadow-md ${
+                          valid
+                            ? "bg-[#1D87A1] text-white hover:bg-[#2D89A1] hover:shadow-lg"
+                            : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        {currentStep === steps.length - 1 ? "Submit" : "Continue"}
+                        <ChevronRight size={18} />
+                      </button>
+                    )}
                   </div>
                 )}
               </motion.div>
