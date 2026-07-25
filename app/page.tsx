@@ -18,6 +18,7 @@ import MortgageCalculator from '@/components/MortgageCalculator'
 import AmortizationSchedule from '@/components/AmortizationSchedule'
 import MortgageDashboard from '@/components/ghrap'
 import { FooterSection } from '@/components/FooterSection'
+import Loan from '@/components/loan'
 
 export default function HomePage() {
   const features = [
@@ -109,6 +110,7 @@ export default function HomePage() {
         <DashboardSection/>
         <MortgageDashboard/>
         <FooterSection />
+        <Loan/>
 
         
 
